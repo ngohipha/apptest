@@ -40,38 +40,77 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Truyen Clone App'),
-      actions: [
-        PopupMenuButton<Category>(
-          onSelected: handleCategorySelection,
-          itemBuilder: (BuildContext context) {
-            return categories.map((Category category) {
-              return PopupMenuItem<Category>(
-                value: category,
-                child: Text(category.title),
-              );
-            }).toList();
-          },
-        ),
-      ],
-    ),
-    body: categories.isEmpty
-      ? Center(child: CircularProgressIndicator())
-      : ListView.builder(
-        itemCount: categories.length,
-        itemBuilder: (_, index) {
-          final category = categories[index];
-          return Card(
-            child: ListTile(
-              title: Text(category.title),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () => handleCategorySelection(category),
-            ),
-          );
-        },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Truyen Clone App'),
+        actions: [
+          PopupMenuButton<Category>(
+            onSelected: handleCategorySelection,
+            itemBuilder: (BuildContext context) {
+              return categories.map((Category category) {
+                return PopupMenuItem<Category>(
+                  value: category,
+                  child: Text(category.title),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
-  );
-}
+      body: categories.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: categories.length,
+              itemBuilder: (_, index) {
+                final category = categories[index];
+                return Container(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // category.poster != null
+                      //     ? ClipRRect(
+                      //         borderRadius: BorderRadius.circular(8),
+                      //         child: Image.network(
+                      //           category.poster,
+                      //           fit: BoxFit.cover,
+                      //           height: 30,
+                      //           width: 30,
+                      //         ),
+                      //       )
+                      //     : Icon(Icons.category, size: 50),
+                      // SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              category.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Author: ${category.author}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.arrow_forward_ios),
+                        onPressed: () => handleCategorySelection(category),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+    );
+  }
 }

@@ -29,6 +29,7 @@ class _StoryListPageState extends State<StoryListPage> {
 
   Future<void> fetchData() async {
     final url = '${baseUrl}/category/id/${widget.category.id}/story';
+    print(url);
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -72,7 +73,7 @@ class _StoryListPageState extends State<StoryListPage> {
                           child: GestureDetector(
                             onTap: () => handleStorySelection(story),
                             child: Icon(
-                              Icons.favorite_border,
+                              Icons.menu_book,
                               color: Colors.grey,
                               size: 24.0,
                             ),
@@ -87,6 +88,7 @@ class _StoryListPageState extends State<StoryListPage> {
                               fontSize: 16,
                             ),
                           ),
+                          
                         ),
                       ],
                     ),
