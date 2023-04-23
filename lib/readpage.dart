@@ -2,6 +2,7 @@ import 'package:appnoppv/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
+import 'package:html/parser.dart';
 import 'dart:convert';
 
 class ReaderPage extends StatefulWidget {
@@ -32,19 +33,41 @@ class _ReaderPageState extends State<ReaderPage> {
     fetchData();
   }
 
-Future<void> fetchData() async {
-  setState(() => isLoading = true);
-  final url = '${baseUrl}/chapter/id/${widget.chapter.id}';
-  print(url);
+  Future<void> fetchData() async {
+    setState(() => isLoading = true);
+    final url = '${baseUrl}/chapter/id/${widget.chapter.id}';
+    print(url);
+    final response = await http.get(Uri.parse(url));
+    String parseHtmlString(String htmlString) {
+      var document = parse(htmlString);
 
-  final response = await http.get(Uri.parse(url));
+      String parsedString = parse(document.body?.text).documentElement!.text;
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body) as Map<String, dynamic>;
-    content = data['body'].join('\n');
-    setState(() => isLoading = false);
+      return parsedString;
+    }
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+      content = parseHtmlString(data['body'].join(''));
+      setState(() => isLoading = false);
+    }
   }
-}
+
+  // String _parseHtmlString(String htmlString) {
+  //   RegExp exp = RegExp(r"<[^]*?>", multiLine: true, caseSensitive: true);
+  //   String parsedString = htmlString
+  //       .replaceAll(exp, "") // Strip Tags
+  //       .replaceAll("\n\n", "<p>") // Paragraphs
+  //       .replaceAll("\n", "<br>") // Line Breaks
+  //       .replaceAll('"', "&quot;") // Quote Marks
+  //       .replaceAll("'", "&apos;") // Apostrophe
+  //       .replaceAll(">", "&lt;") // Less-than Comparator
+  //       .replaceAll("<", "&gt;")
+  //       .trim(); // Whitespace
+
+  //   return parsedString;
+  // }
 
   void changeFontSize(double size) {
     setState(() {
@@ -75,31 +98,19 @@ Future<void> fetchData() async {
               PopupMenuItem(
                 child: Text('Font size'),
                 textStyle: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Roboto',
-                  color: Colors.black
-                ),
+                    fontSize: 16, fontFamily: 'Roboto', color: Colors.black),
                 value: 1,
               ),
               PopupMenuItem(
                 child: Text('Font family'),
                 textStyle: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Roboto',
-                                    color: Colors.black
-
-                ),
+                    fontSize: 16, fontFamily: 'Roboto', color: Colors.black),
                 value: 2,
               ),
               PopupMenuItem(
                 child: Text('Background color'),
                 textStyle: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Roboto',
-                                    color: Colors.black
-
-                
-                ),
+                    fontSize: 16, fontFamily: 'Roboto', color: Colors.black),
                 value: 3,
               ),
             ],
