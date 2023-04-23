@@ -111,10 +111,10 @@ class Category {
       };
 }
 
-enum Status { ANG_RA, FULL }
+enum Status { DANG_RA, FULL }
 
 final statusValues =
-    EnumValues({"Đang ra": Status.ANG_RA, "Full": Status.FULL});
+    EnumValues({"Đang ra": Status.DANG_RA, "Full": Status.FULL});
 
 class EnumValues<T> {
   Map<String, T> map;
